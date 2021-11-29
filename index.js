@@ -23,7 +23,8 @@ app.use((req, res, next) => {
   console.log('IsSecure = ', req.secure);
   console.log('BODY', req.body);
   console.log('QUERY', req.query);
-
+  console.log('HEADERS', req.headers);
+  
   next();
 });
 

@@ -1,15 +1,15 @@
 const express = require('express');
 const Todo = require('../dataBase/models/todo.model');
 const router = express.Router();
-const {asyncHandler} = require('../middleware/middleware')
+const {asyncHandler, requireToken} = require('../middleware/middleware')
 
 function initRoutes() {
-  router.post('/api/todos/', asyncHandler(createTodo));
-  router.get('/api/todos/', asyncHandler(getTodos));
-  router.get('/api/todos/:id', asyncHandler(getTodoById));
-  router.patch('/api/todos/:id', asyncHandler(updateTodo));
-  router.delete('/api/todos/', asyncHandler(deleteTodos));
-  router.delete('/api/todos/:id', asyncHandler(deleteTodoById));
+  router.post('/api/todos/', asyncHandler(requireToken), asyncHandler(createTodo));
+  router.get('/api/todos/', asyncHandler(requireToken), asyncHandler(getTodos));
+  router.get('/api/todos/:id', asyncHandler(requireToken), asyncHandler(getTodoById));
+  router.patch('/api/todos/:id', asyncHandler(requireToken), asyncHandler(updateTodo));
+  router.delete('/api/todos/', asyncHandler(requireToken), asyncHandler(deleteTodos));
+  router.delete('/api/todos/:id', asyncHandler(requireToken), asyncHandler(deleteTodoById));
 }
 
 const createTodo = async (req, res, next) => {

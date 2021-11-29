@@ -1,6 +1,9 @@
-function requireToken(req, res, next) {
-  const userToken = req.headers['TOKEN'];
-  const token = Token.findOne({ where: { value: userToken } });
+const ErrorResponse = require('../classes/error-response');
+const Token = require('../dataBase/models/token.model');
+
+async function requireToken(req, res, next) {
+  const userToken = req.header('Authorization');
+  const token = await Token.findOne({ where: { value: userToken } });
   if (token) {
     req.body.userId = token.userId;
     next();
@@ -39,5 +42,6 @@ module.exports = {
   asyncHandler,
   syncHandler,
   notFound,
-  errorHandler
+  errorHandler,
+  requireToken
 };

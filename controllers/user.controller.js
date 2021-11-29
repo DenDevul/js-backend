@@ -2,17 +2,21 @@ const express = require('express');
 const router = express.Router();
 const Token = require('../dataBase/models/token.model');
 const User = require('../dataBase/models/user.model');
-const {asyncHandler} = require('../middleware/middleware')
+const {asyncHandler, requireToken} = require('../middleware/middleware')
 
 function initRoutes() {
-  router.get('/api/users/me', asyncHandler(getUserInfo));
-  router.patch('/api/users/logout', asyncHandler(updateUserInfo));
-  router.post('/api/users/me', asyncHandler(logout));
+  router.get('/api/users/me', asyncHandler(requireToken), asyncHandler(getUserInfo));
+  router.patch('/api/users/me', asyncHandler(requireToken), asyncHandler(updateUserInfo));
+  router.post('/api/users/logout', asyncHandler(requireToken), asyncHandler(logout));
 }
 
 const getUserInfo = async (req, res, next) => {
   const user = await User.findByPk(req.body.userId);
-  res.status(200).json(user)
+  if(user) {
+    res.status(200).json(user)
+  } else {
+    res.sendStatus(500)
+  }
 };
 
 const updateUserInfo = async (req, res, next) => {
