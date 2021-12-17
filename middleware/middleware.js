@@ -2,7 +2,7 @@ const ErrorResponse = require('../classes/error-response');
 const Token = require('../dataBase/models/token.model');
 
 async function requireToken(req, res, next) {
-  const userToken = req.header('Authorization');
+  const userToken = req.header('x-access-token');
   const token = await Token.findOne({ where: { value: userToken } });
   if (token) {
     req.body.userId = token.userId;
