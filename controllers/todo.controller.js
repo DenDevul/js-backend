@@ -34,19 +34,15 @@ function initRoutes() {
 }
 
 const createTodo = async (req, res, next) => {
-  const userToken = req.headers['x-access-token'];
-  const { userId } = await Token.findOne({ where: { value: userToken } });
-  req.body.userId = userId;
-  Todo.create(req.body);
+  req.body.token.userId = req.body.userId;
+  await Todo.create(req.body.token);
   res.sendStatus(201);
 };
 
 const getTodos = async (req, res, next) => {
-  const userToken = req.headers['x-access-token'];
-  const { userId } = await Token.findOne({ where: { value: userToken } });
   const todos = await Todo.findAll({
     where: {
-      userId: userId
+      userId: req.body.userId
     }
   });
   res.status(200).json(todos);
