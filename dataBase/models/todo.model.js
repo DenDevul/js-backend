@@ -12,7 +12,7 @@ Todo.init(
     },
     title: {
       type: Sequelize.DataTypes.STRING,
-      defaultValue: 'Title'
+      // defaultValue: 'Title'
     },
     userId: {
       type: Sequelize.DataTypes.UUID

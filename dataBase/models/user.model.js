@@ -21,9 +21,9 @@ User.init(
     email: {
       type: Sequelize.DataTypes.STRING
     },
-    name: {
-      type: Sequelize.DataTypes.STRING
-    }
+    // name: {
+    //   type: Sequelize.DataTypes.STRING
+    // }
   },
   { sequelize: sequelize, underscored: true, modelName: 'user' }
 );
