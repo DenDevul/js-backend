@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
+const logger = require('./log')
 const authRouter = require('./controllers/auth.controller');
 const todoRouter = require('./controllers/todo.controller');
 const userRouter = require('./controllers/user.controller');
@@ -36,5 +37,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 http.createServer(app).listen(3000, () => {
-  console.log('Server is working on port 3000');
+  logger.info('Server is working on port 3000')
 });
