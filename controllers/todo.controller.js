@@ -1,6 +1,5 @@
 const express = require('express');
 const Todo = require('../dataBase/models/todo.model');
-const Token = require('../dataBase/models/token.model');
 const router = express.Router();
 const { asyncHandler, requireToken } = require('../middleware/middleware');
 
@@ -10,32 +9,25 @@ function initRoutes() {
     asyncHandler(requireToken),
     asyncHandler(createTodo)
   );
-  router.get('/api/todos/', asyncHandler(requireToken), asyncHandler(getTodos));
   router.get(
-    '/api/todos/:id',
-    asyncHandler(requireToken),
-    asyncHandler(getTodoById)
-  );
+    '/api/todos/', 
+    asyncHandler(requireToken), 
+    asyncHandler(getTodos));
   router.patch(
-    '/api/todos/:id',
+    '/api/todos/',
     asyncHandler(requireToken),
     asyncHandler(updateTodo)
   );
   router.delete(
     '/api/todos/',
     asyncHandler(requireToken),
-    asyncHandler(deleteTodos)
-  );
-  router.delete(
-    '/api/todos/:id',
-    asyncHandler(requireToken),
     asyncHandler(deleteTodoById)
   );
 }
 
 const createTodo = async (req, res, next) => {
-  req.body.token.userId = req.body.userId;
-  await Todo.create(req.body.token);
+  req.body.todo.userId = req.body.userId;
+  await Todo.create(req.body.todo);
   res.sendStatus(201);
 };
 
@@ -48,28 +40,23 @@ const getTodos = async (req, res, next) => {
   res.status(200).json(todos);
 };
 
-const getTodoById = async (req, res, next) => {
-  const todo = await Todo.findByPk(req.params.id);
-  res.status(200).json(todo);
-};
-
 const updateTodo = async (req, res, next) => {
-  res.sendStatus(200);
-};
+  try {
+    await Todo.update(req.body.todo, {
+      where: { id: req.query.id, userId: req.body.userId }
+    });
 
-const deleteTodos = async (req, res, next) => {
-  await Todo.destroy({
-    where: {
-      userId: req.body.userId
-    }
-  });
-  res.sendStatus(200);
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
 
 const deleteTodoById = async (req, res, next) => {
   await Todo.destroy({
     where: {
-      id: req.params.id
+      id: req.query.id,
+      userId: req.body.userId
     }
   });
   res.sendStatus(200);
