@@ -31,8 +31,12 @@ const updateUserInfo = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  await Token.destroy({where:{id: req.header('x-access-token')}})
-  res.sendStatus(200)
+  try {
+    await Token.destroy({where:{id: req.body.userId}})
+    res.sendStatus(200)
+  } catch (error) {
+    res.sendStatus(500)
+  }
 };
 
 initRoutes();
