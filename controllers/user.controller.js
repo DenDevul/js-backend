@@ -32,7 +32,7 @@ const updateUserInfo = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    await Token.destroy({where:{id: req.body.userId}})
+    await Token.destroy({where:{userId: req.body.userId}})
     res.sendStatus(200)
   } catch (error) {
     res.sendStatus(500)
